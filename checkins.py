@@ -59,10 +59,10 @@ for eintrag in daten:
 checkins.sort(key=lambda l: l["ein"])
 print(f"Checkins für Matrikelnummer {matr_index}:")
 for checkin in checkins:
-    print("Check-in {} in Raum {} bis {} (Dauer: {})".format(checkin["ein"],
-                                                             checkin["raum"],
-                                                             checkin["aus"],
-                                                             checkin["aus"] - checkin["ein"]))
+    print("Check-in in Raum {} von {} bis {} (Dauer: {})".format(checkin["raum"],
+                                                                 datetime.datetime.strftime(checkin["ein"], "%d.%m.%y %H:%M"), 
+                                                                 datetime.datetime.strftime(checkin["aus"], "%d.%m.%y %H:%M"),
+                                                                 checkin["aus"] - checkin["ein"]))
 while True:
     datum = get_datum("Gibt es weitere Checkins, die nicht erkannt wurden?\nWenn nein, ENTER drücken.\nWenn ja, wann (TT.MM.JJJJ)? ")
     if datum is None:
@@ -95,7 +95,7 @@ for checkin in checkins:
 for kontakt, details in kontakte.items():
     print(f"Kontakte mit {kontakt}:")
     for detail in details:
-        print(f"  {detail[0]} von {detail[1]} bis {detail[2]} ({detail[2]-detail[1]})")
+        print(f'  {detail[0]} von {datetime.datetime.strftime(detail[1], "%d.%m.%y %H:%M")} bis {datetime.datetime.strftime(detail[2], "%d.%m.%y %H:%M")} ({detail[2]-detail[1]})')
 
 print(f"Liste aller Kontaktpersonen seit dem {sd_text}:")
 for kontakt in kontakte:
