@@ -32,6 +32,7 @@ def get_zeit(prompt):
 
 dformat = "%d.%m.%Y, %H:%M" # Datumsformat in der checkins-Datei
 kdformat = "%d.%m.%y %H:%M" # Kurz-Datumsformat für die Ausgabe
+zformat = "%H:%M"
 
 with open("checkins.csv", newline="", encoding="cp1252") as csvfile:
     reader = csv.DictReader(csvfile, delimiter=";")
@@ -78,7 +79,7 @@ for checkin in checkins:
     print("Check-in in Raum {} von {} bis {} (Dauer: {})".format(checkin["raum"],
                                                                  datetime.datetime.strftime(checkin["ein"], kdformat), 
                                                                  datetime.datetime.strftime(checkin["aus"], kdformat),
-                                                                 checkin["aus"] - checkin["ein"]))
+                                                                 str(checkin["aus"] - checkin["ein"])[:-3]))
 while True:
     datum = get_datum("Gibt es weitere Checkins, die nicht erkannt wurden?\nWenn nein, ENTER drücken.\nWenn ja, wann (TT.MM.JJJJ)? ")
     if datum is None:
@@ -111,7 +112,7 @@ for checkin in checkins:
 for kontakt, details in kontakte.items():
     print(f"Kontakte mit {kontakt}:")
     for detail in details:
-        print(f'  {detail[0]} von {datetime.datetime.strftime(detail[1], kdformat)} bis {datetime.datetime.strftime(detail[2], kdformat)} ({detail[2]-detail[1]})')
+        print(f'  {detail[0]} von {datetime.datetime.strftime(detail[1], kdformat)} bis {datetime.datetime.strftime(detail[2], kdformat)} ({str(detail[2]-detail[1])[:-3]})')
 
 print(f"Liste aller Kontaktpersonen seit dem {sd_text}:")
 for kontakt in kontakte:
@@ -121,6 +122,23 @@ win32clipboard.OpenClipboard()
 win32clipboard.EmptyClipboard()
 win32clipboard.SetClipboardText("\n".join(kontakte))
 win32clipboard.CloseClipboard()
-input("Fertig! Die Matrikelnummern der Kontaktpersonen befinden sich in der Zwischenablage.\nENTER zum Beenden.")
+input("Fertig! Die Matrikelnummern der Kontaktpersonen befinden sich in der Zwischenablage.\nWeiter mit ENTER...")
 
+print(f"Liste aller Kontaktpersonen seit dem {sd_text} inklusive aggregierter Kontaktinfos:")
+zusammenfassung = []
+zusammenfassung.append("Kontakt\tAnzahl\tGesamtdauer")
+for kontakt, ereignisse in kontakte.items():
+    anzahl = len(ereignisse)
+    gesamtdauer = datetime.timedelta()
+    for e in ereignisse:
+        gesamtdauer += e[2] - e[1]
+    zusammenfassung.append(f"{kontakt}\t{anzahl}\t{str(gesamtdauer)[:-3]}")
 
+for eintrag in zusammenfassung:
+    print(eintrag)
+
+win32clipboard.OpenClipboard()
+win32clipboard.EmptyClipboard()
+win32clipboard.SetClipboardText("\n".join(zusammenfassung))
+win32clipboard.CloseClipboard()
+input("Fertig! Die aggregierten Informationen befinden sich in der Zwischenablage\n(und können z. B. in Excel eingefügt werden).\nENTER zum Beenden.")
