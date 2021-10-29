@@ -7,4 +7,6 @@ Es ist möglich, weitere Räume/Zeiträume anzugeben, zu denen die Index-Matrike
 
 Ausgabe ist zunächst eine Liste aller Kontaktereignisse, danach eine Liste der Kontakt-Matrikelnummern.
 
-Die Liste wird zuletzt in die Windows-Zwischenablage eingefügt.
+Die Liste wird anschließend in die Windows-Zwischenablage eingefügt.
+
+Danach wird noch eine Liste ausgegeben, die neben den Matrikelnummern die Anzahl und Gesamtdauer der jeweiligen Kontakte enthält und zum Einfügen in z. B. eine Excel-Tabelle geeignet ist.
